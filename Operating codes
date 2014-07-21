@@ -1,0 +1,60 @@
+###input data and give data name "cds"
+>table=read.table("/home/simon/R/data/isoforms.results-breakdown/compiled",header=TRUE, row.names=1)
+
+>design=data.frame(row.names=colnames(table),condition=c("no-fungicide","no-fungicide","no-fungicide","no-fungicide","no-fungicide","fungicide","fungicide","fungicide","fungicide","fungicide"),blocks=c("29a","29b","29c","30a","30c","29a","29b","29c","30a","30c"))
+
+>library("DESeq")
+
+> cds=newCountDataSet(table,design)
+> cds=estimateSizeFactors(cds)
+> sizeFactors(cds)
+
+###filtering by overall count and output to a file
+> rs=rowSums(counts (cds)) 
+> theta = 0.4
+> use = (rs>quantile(rs,probs=theta)) 
+> table(use)
+> cdsFilt=cds[use,] 
+
+###estimate variance and output
+> cds=estimateDispersions(cdsFilt) or cds=estimateDispersions(cdsFilt,method=c("pooled-CR"))
+> plotDispEsts(cdsFilt)
+> write.table(counts (cdsFilt, normalized=TRUE), file="/home/simon/R/data/isoforms.results-breakdown/output-S-breakdown.txt")
+
+###compare simply two conditions(optional)
+> res = nbinomTest(cdsFilt,"fungicide","no-fungicide")
+> head(res)
+> plotMA(res)
+
+> hist(res$pval,breaks=100, col="skyblue",border="slateblue",main="")
+> resSig=res[res$padj<0.1]
+
+###look at the p-adjust from the lowest
+> head(resSig[order(resSig$padj),])
+----look the most strongly down-regulated ones----
+> head(resSig[ order(resSig$foldChange, -resSig$baseMean ),])
+----look the most strongly up-regulated ones----
+> head(resSig[ order(-resSig$foldChange, -resSig$baseMean ),])
+
+###variance stablization(optional)
+> cdsBlind = estimateDispersions(cdsFilt,method="blind")
+> vsd = varianceStabilizingTransformation(cdsBlind)
+> library("vsn")
+> par(mfrow=c(1,2))
+> notAllZero = (rowSums(counts(cds))>0)
+> meanSdPlot(log2(counts(cds)[notAllZero, ]+1),ylim=c(0,2.5))
+> meanSdPlot(vsd[notAllZero, ],ylim=c(0,2.5))
+
+###Then use "vsd" instead of "cdsFilt"
+###multifactor designs
+> fit1=fitNbinomGLMs(cdsFilt, count~blocks+condition)
+> fit0=fitNbinomGLMs(cdsFilt, count~blocks)
+> pvalsGLM=nbinomGLMTest(fit1,fit0)
+> padjGLM=p.adjust(pvalsGLM,method="BH")
+> tab1=table("Number of Genes"=padjGLM<0.01)
+> tab1
+> write.table(padjGLM, file="/home/simon/R/data/isoforms.results-breakdown/p-adjust.txt") 
+> write.table(pvalsGLM, file="/home/simon/R/data/isoforms.results-breakdown/p-value.txt") 
+
+
+q() --no-restore --no-save
