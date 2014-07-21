@@ -1,8 +1,6 @@
 ###input data and give data name "cds"
 >table=read.table("/home/simon/R/data/isoforms.results-breakdown/compiled",header=TRUE, row.names=1)
-
 >design=data.frame(row.names=colnames(table),condition=c("no-fungicide","no-fungicide","no-fungicide","no-fungicide","no-fungicide","fungicide","fungicide","fungicide","fungicide","fungicide"),blocks=c("29a","29b","29c","30a","30c","29a","29b","29c","30a","30c"))
-
 >library("DESeq")
 
 > cds=newCountDataSet(table,design)
