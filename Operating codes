@@ -24,7 +24,7 @@
 > res = nbinomTest(cdsFilt,"fungicide","no-fungicide")
 > head(res)
 > plotMA(res)
-
+## check if it is skewed..
 > hist(res$pval,breaks=100, col="skyblue",border="slateblue",main="")
 > resSig=res[res$padj<0.1]
 
