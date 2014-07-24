@@ -15,8 +15,9 @@
 > cdsFilt=cds[use,] 
 
 ###estimate variance and output
-> cds=estimateDispersions(cdsFilt) or cds=estimateDispersions(cdsFilt,method=c("pooled-CR"))
-> plotDispEsts(cdsFilt)
+> cds=estimateDispersions(cdsFilt) or cds=estimateDispersions(cdsFilt,method=c("pooled-CR")) 
+## obtains dispersion estimates for a count data set, "pooled-CR" works also with crossed factors (e.g., in designs with paired samples).
+> plotDispEsts(cdsFilt) ## see the dispersion looks like, if the line go through the cloud.
 > write.table(counts (cdsFilt, normalized=TRUE), file="/home/simon/R/data/isoforms.results-breakdown/output-S-breakdown.txt")
 
 ###compare simply two conditions(optional)
