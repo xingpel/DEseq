@@ -30,9 +30,9 @@
 
 ###look at the p-adjust from the lowest
 > head(resSig[order(resSig$padj),])
-----look the most strongly down-regulated ones----
+##----look the most strongly down-regulated ones----
 > head(resSig[ order(resSig$foldChange, -resSig$baseMean ),])
-----look the most strongly up-regulated ones----
+##----look the most strongly up-regulated ones----
 > head(resSig[ order(-resSig$foldChange, -resSig$baseMean ),])
 
 ###variance stablization(optional)
