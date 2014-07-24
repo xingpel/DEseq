@@ -49,7 +49,7 @@
 > fit0=fitNbinomGLMs(cdsFilt, count~blocks)
 > pvalsGLM=nbinomGLMTest(fit1,fit0)
 > padjGLM=p.adjust(pvalsGLM,method="BH")
-> tab1=table("Number of Genes"=padjGLM<0.01)
+> tab1=table("Number of Genes"=padjGLM<0.05)
 > tab1
 > write.table(padjGLM, file="/home/simon/R/data/isoforms.results-breakdown/p-adjust.txt") 
 > write.table(pvalsGLM, file="/home/simon/R/data/isoforms.results-breakdown/p-value.txt") 
